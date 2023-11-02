@@ -1,0 +1,19 @@
+@import "../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../node_modules/bootstrap-icons/font/bootstrap-icons.css";
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  display: flex;
+}
+
+.nav__container{
+    height: 100vh;
+    width: 20px;
+    background-color: #4DBDC1;
+}
+
+.icon__patients {
+    color: white;
+   font-size: 50px;
+}
