@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
       direction: document.getElementById("patientDirection").value,
     };
 
-    ipcRenderer.send("savePatient", patientData);
+    //ipcRenderer.send("savePatient", patientData);
+    ipcRenderer.send("openFile", patientData);
   });
 });

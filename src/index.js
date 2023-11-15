@@ -1,5 +1,6 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const { createExcelTemplate } = require("./template/excelTemplate.js");
+const { spawn } = require("child_process");
 const path = require("path");
 var fs = require("fs");
 
@@ -10,6 +11,19 @@ try {
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
   app.quit();
+}
+
+// Function to check if a file exists
+function checkFileExistence(filePath) {
+  return new Promise((resolve) => {
+    fs.access(filePath, fs.constants.F_OK, (err) => {
+      if (err) {
+        resolve(false); // File does not exist
+      } else {
+        resolve(true); // File exists
+      }
+    });
+  });
 }
 
 const createWindow = () => {
@@ -30,6 +44,30 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 };
+
+ipcMain.on("openFile", async (event, patientData) => {
+  const excelFilePath = "c:\\_temp\\" + patientData.name + ".xlsx";
+
+  const fileExists = await checkFileExistence(excelFilePath);
+  if (fileExists) {
+    const excelProcess = spawn(
+      "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE",
+      [excelFilePath]
+    );
+
+    excelProcess.on("close", (code) => {
+      if (code !== 0) {
+        console.error(`Excel process exited with code ${code}`);
+      }
+    });
+
+    excelProcess.on("error", (err) => {
+      console.error("Error starting Excel:", err);
+    });
+  } else {
+    alert("El archivo no existe");
+  }
+});
 
 ipcMain.on("savePatient", (event, patientData) => {
   var Excel = require("exceljs");
